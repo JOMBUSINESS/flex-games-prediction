@@ -105,7 +105,7 @@ async function performLogin(req, res, allowedRoles) {
     if (!allowedRoles.includes(user.role)) {
       return res.status(403).json({ success: false, message: "Use the correct login portal." });
     }
-    if (user.role === "user" && !user.phone_verified) {
+    if (process.env.REQUIRE_PHONE_VERIFICATION === "true" && user.role === "user" && !user.phone_verified) {
       return res.status(403).json({
         success: false,
         code: "PHONE_NOT_VERIFIED",
