@@ -10,6 +10,7 @@ const { Pool } = require("pg");
 const { Server } = require("socket.io");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
+const otpRoutes = require("./routes/otp");
 
 const app = express();
 const server = http.createServer(app);
@@ -56,6 +57,7 @@ app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/otp", otpRoutes);
 
 // Session configuration
 app.use(session({
