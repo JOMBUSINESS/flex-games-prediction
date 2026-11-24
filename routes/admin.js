@@ -12,7 +12,7 @@ router.get("/overview", async (req, res) => {
       db.query("SELECT COUNT(*)::int AS total FROM users WHERE role = 'user'"),
       db.query("SELECT COUNT(*)::int AS total FROM payments WHERE status = 'pending'"),
       db.query("SELECT COUNT(*)::int AS total FROM predictions"),
-      db.query("SELECT COUNT(*)::int AS total FROM memberships WHERE status = 'active' AND expires_at > NOW()")
+      db.query("SELECT COUNT(*)::int AS total FROM memberships WHERE status = 'active' AND starts_at <= NOW() AND expires_at > NOW()")
     ]);
     res.json({ success: true, overview: {
       totalUsers: users.rows[0].total,
