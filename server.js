@@ -8,6 +8,8 @@ const session = require("express-session");
 const helmet = require("helmet");
 const { Pool } = require("pg");
 const { Server } = require("socket.io");
+const authRoutes = require("./routes/auth");
+const adminRoutes = require("./routes/admin");
 
 const app = express();
 const server = http.createServer(app);
