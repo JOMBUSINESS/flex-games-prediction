@@ -69,7 +69,8 @@ async function register(req, res) {
     );
     return res.status(201).json({
       success: true,
-      message: "Account created. Phone verification is required before login.",
+      message: process.env.REQUIRE_PHONE_VERIFICATION === "true" ? "Account created. Verify your phone number before logging in." : "Account created. You can now log in.",
+      verificationRequired: process.env.REQUIRE_PHONE_VERIFICATION === "true",
       user: publicUser(result.rows[0])
     });
   } catch (error) {
