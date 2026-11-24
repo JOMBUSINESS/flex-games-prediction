@@ -21,6 +21,8 @@ services:
           property: connectionString
       - key: SESSION_SECRET
         generateValue: true
+      - key: REQUIRE_PHONE_VERIFICATION
+        value: "false"
       - key: FRONTEND_ORIGINS
         sync: false
       - key: PUBLIC_APP_URL
