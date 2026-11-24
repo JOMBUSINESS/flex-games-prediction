@@ -30,3 +30,8 @@ The workflow at `.github/workflows/pages.yml` deploys the repository contents to
 The GitHub Pages frontend and Render API are on different sites. The API currently uses secure cross-site session cookies, but some browsers or privacy settings block third-party cookies. For reliable long-term sign-in, use a custom domain arrangement that places the website and API under the same registrable domain, or move the frontend to a host/domain arrangement that supports first-party API cookies.
 
 The admin console also requires an existing account with an administrator role. Create or promote the first administrator using the backend's documented super-admin bootstrap script; do not expose bootstrap credentials in this repository.
+
+
+## Deployment verification
+
+After selecting GitHub Actions as the Pages source, a new push triggers the Pages workflow. Check the Actions tab for the latest `Deploy FLEX GAMES frontends to GitHub Pages` run. If the workflow still fails at `Configure Pages`, confirm Pages is enabled for this repository and GitHub Actions is selected as its source, then rerun the workflow.
