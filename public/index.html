@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d19">
+  <title>FLEX GAMES PREDICTION | Win With Insight</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/app.js" defer></script>
+</head>
+<body>
+  <header class="navbar">
+    <a href="/" class="brand">FLEX <span>GAMES</span></a>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#predictions">Predictions</a>
+      <a href="#vip">VIP</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="btn btn-outline" onclick="showAuth('login')">Login</button>
+      <button class="btn btn-primary" onclick="showAuth('register')">Join Now</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-content">
+        <span class="eyebrow">THE FUTURE OF SPORTS PREDICTIONS</span>
+        <h1>Think Smart.<br><span>Predict Better.</span></h1>
+        <p>Get sports insights, carefully analysed predictions and premium access to exclusive selections.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="showAuth('register')">Get Started</button>
+          <a class="btn btn-outline" href="#predictions">Explore Predictions</a>
+        </div>
+        <div class="hero-note">Data-driven insights. Responsible predictions.</div>
+      </div>
+      <div class="hero-visual">
+        <div class="score-card">
+          <span class="live-dot"></span> FLEX MATCH CENTRE
+          <div class="match">
+            <div class="team">⚽<span>HOME</span></div>
+            <strong>VS</strong>
+            <div class="team">⚽<span>AWAY</span></div>
+          </div>
+          <div class="prediction-highlight">
+            <small>FEATURED SELECTION</small>
+            <h3>Match Analysis</h3>
+            <p>Detailed insights and selections</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div><strong>24/7</strong><span>Platform Access</span></div>
+      <div><strong>FREE</strong><span>Free Predictions</span></div>
+      <div><strong>VIP</strong><span>Premium Insights</span></div>
+    </section>
+
+    <section class="section" id="predictions">
+      <div class="section-heading">
+        <span class="eyebrow">MATCH CENTRE</span>
+        <h2>Today's Predictions</h2>
+        <p>Explore available predictions from our platform.</p>
+      </div>
+      <div id="prediction-list" class="prediction-grid">
+        <div class="empty-state">Predictions will appear here once published.</div>
+      </div>
+    </section>
+
+    <section class="vip-section" id="vip">
+      <span class="eyebrow">EXCLUSIVE ACCESS</span>
+      <h2>Unlock the FLEX VIP Experience</h2>
+      <p>Access premium predictions and exclusive sports insights.</p>
+      <button class="btn btn-primary" onclick="showAuth('register')">Become a Member</button>
+    </section>
+  </main>
+
+  <section class="auth-overlay" id="auth-overlay" hidden>
+    <div class="auth-card">
+      <button class="close-btn" onclick="closeAuth()">×</button>
+      <a href="/" class="brand">FLEX <span>GAMES</span></a>
+
+      <div id="auth-content"></div>
+      <p id="auth-message" class="message"></p>
+    </div>
+  </section>
+
+  <footer>
+    <a href="/" class="brand">FLEX <span>GAMES</span></a>
+    <p>© 2026 FLEX GAMES PREDICTION. All rights reserved.</p>
+    <small>Sports predictions involve risk. No outcome is guaranteed.</small>
+  </footer>
+</body>
+</html>
