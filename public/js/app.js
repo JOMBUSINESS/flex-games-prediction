@@ -58,7 +58,8 @@ function showAuth(mode) {
         const response = await api("/api/auth/register", { method: "POST", body: JSON.stringify(data) });
         const result = await response.json();
         if (!response.ok) return showMessage(result.message);
-        showOtp(data.phone);
+        if (result.verificationRequired) showOtp(data.phone);
+        else { showAuth("login"); showMessage(result.message); }
       } catch { showMessage("Unable to connect to the server."); }
     };
   } else if (mode === "login") {
