@@ -45,5 +45,5 @@ The static frontend reads `window.FLEX_API_URL` from `public/config.js`. Set it 
 ## Important deployment notes
 - Cross-site session cookies require HTTPS on both GitHub Pages and Render; the API uses secure, SameSite=None cookies in production.
 - Add the exact public and admin site origins to `FRONTEND_ORIGINS`.
-- Phone OTP currently works only in development and displays the code for local testing. Production SMS delivery is deliberately disabled until an SMS provider is configured.
+- Phone OTP codes are currently generated only in development for testing. The Render blueprint sets `REQUIRE_PHONE_VERIFICATION=false` so new production accounts can log in while no SMS provider is connected. Enable that setting only after integrating a production SMS provider.
 - Never commit `.env`, API keys, database credentials, or real user data.
