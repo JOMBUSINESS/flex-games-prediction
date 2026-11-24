@@ -73,6 +73,10 @@ app.use(session({
   }
 }));
 
+app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/otp", otpRoutes);
+
 // Socket.IO
 const io = new Server(server);
 
