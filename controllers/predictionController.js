@@ -8,7 +8,7 @@ async function listPublicPredictions(req, res) {
         hasVip = true;
       } else {
         const membership = await db.query(
-          "SELECT 1 FROM memberships WHERE user_id = $1 AND status = 'active' AND expires_at > NOW() LIMIT 1",
+          "SELECT 1 FROM memberships WHERE user_id = $1 AND status = 'active' AND starts_at <= NOW() AND expires_at > NOW() LIMIT 1",
           [req.session.userId]
         );
         hasVip = membership.rowCount > 0;
