@@ -1,19 +1,20 @@
 require("dotenv").config();
 
-const path = require("path");
 const http = require("http");
 const express = require("express");
 const session = require("express-session");
+const connectPgSimple = require("connect-pg-simple");
+const cors = require("cors");
 const helmet = require("helmet");
 const { Pool } = require("pg");
 const { Server } = require("socket.io");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const otpRoutes = require("./routes/otp");
+const passwordResetRoutes = require("./routes/passwordReset");
 
 const app = express();
 const server = http.createServer(app);
-
 const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -40,40 +41,62 @@ if (pool) {
 app.locals.db = pool;
 app.disable("x-powered-by");
 app.set("trust proxy", isProduction ? 1 : false);
+
+const allowedOrigins = (process.env.FRONTEND_ORIGINS || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || !isProduction || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error("Origin is not allowed by CORS."));
+  },
+  credentials: true
+}));
+
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// Session middleware must run before every route that reads or writes req.session.
+const PgSession = connectPgSimple(session);
 app.use(session({
+  store: pool ? new PgSession({
+    pool,
+    tableName: "user_sessions",
+    createTableIfMissing: true
+  }) : undefined,
   name: "flex.sid",
   secret: process.env.SESSION_SECRET || "development-only-change-this-secret",
   resave: false,
   saveUninitialized: false,
+  rolling: true,
   cookie: {
     httpOnly: true,
     secure: isProduction,
-    sameSite: "lax",
-    maxAge: 1000 * 60 * 60 * 24
+    sameSite: isProduction ? "none" : "lax",
+    maxAge: 1000 * 60 * 60 * 24 * 7
   }
 }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/otp", otpRoutes);
+app.use("/api/auth/password", passwordResetRoutes);
 
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigins.length ? allowedOrigins : false,
+    credentials: true
+  }
+});
 app.locals.io = io;
-
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
   socket.on("disconnect", () => console.log("A user disconnected:", socket.id));
 });
-
-// Temporary same-repository static serving during development.
-// Public and admin frontends will move to independent GitHub repositories.
-const publicDirectory = path.join(__dirname, "public");
-app.use(express.static(publicDirectory));
 
 app.get("/api/health", async (req, res) => {
   let database = "not_configured";
@@ -92,13 +115,6 @@ app.get("/api/health", async (req, res) => {
     status: "running",
     database
   });
-});
-
-app.get("/admin", (req, res) => {
-  res.sendFile(path.join(publicDirectory, "admin", "index.html"));
-});
-app.get("/admin/*path", (req, res) => {
-  res.sendFile(path.join(publicDirectory, "admin", "index.html"));
 });
 
 app.get("/api", (req, res) => {
