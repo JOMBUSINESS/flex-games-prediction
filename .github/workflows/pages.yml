@@ -18,10 +18,19 @@ jobs:
         uses: actions/checkout@v4
       - name: Configure Pages
         uses: actions/configure-pages@v5
+      - name: Prepare frontend-only deployment
+        run: |
+          mkdir -p _site
+          cp -R website _site/website
+          cp -R admin _site/admin
+          cat > _site/index.html <<'EOF'
+          <!doctype html>
+          <html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=./website/"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FLEX GAMES PREDICTION</title></head><body><p>Opening <a href="./website/">FLEX GAMES PREDICTION</a>…</p></body></html>
+          EOF
       - name: Upload site files
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
   deploy:
     environment:
       name: github-pages
