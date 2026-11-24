@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Account | FLEX GAMES</title>
+  <link rel="stylesheet" href="/css/style.css"><script src="/config.js"></script>
+  <style>
+    .account-wrap{max-width:1100px;margin:55px auto;padding:0 20px}
+    .account-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+    .account-panel{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
+    .account-panel h2{margin-bottom:14px}.account-panel p{color:var(--muted);margin:5px 0}
+    .account-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:15px}
+  </style>
+</head>
+<body>
+  <header class="navbar"><a href="/" class="brand">FLEX <span>GAMES</span></a><button class="btn btn-outline" id="logout">Log out</button></header>
+  <main class="account-wrap">
+    <div class="account-head"><div><span class="eyebrow">MEMBER AREA</span><h1>My Account</h1></div></div>
+    <section class="account-panel"><h2 id="welcome">Loading your account…</h2><p id="account-detail"></p></section>
+    <section class="account-panel"><h2>Available Predictions</h2><div id="prediction-list" class="account-list">Loading…</div></section>
+    <p id="account-message" class="message" role="status"></p>
+  </main>
+  <script>
+    const API = window.FLEX_API_URL || "";
+    async function call(path, options={}) {
+      return fetch(API+path,{credentials:"include",...options,headers:{"Content-Type":"application/json",...(options.headers||{})}});
+    }
+    function safe(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+    async function load(){
+      try{
+        const response=await call("/api/auth/me"); const data=await response.json();
+        if(!response.ok){location.href="/";return;}
+        document.getElementById("welcome").textContent="Welcome, "+data.user.full_name;
+        document.getElementById("account-detail").textContent=[data.user.email,data.user.phone,data.user.country].filter(Boolean).join(" · ");
+        const p=await call("/api/predictions"); const pd=await p.json();
+        const list=document.getElementById("prediction-list");
+        if(!p.ok||!pd.predictions?.length){list.textContent="No published predictions are available yet.";return;}
+        list.innerHTML=pd.predictions.map(x=>`<article class="score-card"><small>${safe(x.sport||"SPORT")} · ${safe(x.access_level||"free").toUpperCase()}</small><h3>${safe(x.event_name)}</h3><p>${safe(x.prediction)}</p><p>Odds: ${safe(x.odds??"N/A")}</p><p>Result: ${safe(x.result||"pending")}</p></article>`).join("");
+      }catch{document.getElementById("account-message").textContent="Unable to connect to the server.";}
+    }
+    document.getElementById("logout").onclick=async()=>{await call("/api/auth/logout",{method:"POST"});location.href="/";};
+    load();
+  </script>
+</body>
+</html>
