@@ -11,7 +11,6 @@ function api(path, options = {}) {
   });
 }
 function showMessage(text) { message.textContent = text || ""; }
-function closeAuth() { overlay.hidden = true; }
 function passwordField(name, label, autocomplete) {
   return `<label for="${name}">${label}</label>
     <div class="password-wrap">
