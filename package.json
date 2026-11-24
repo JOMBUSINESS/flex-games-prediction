@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "create:superadmin": "node scripts/create-super-admin.js"
+    "create:superadmin": "node scripts/create-super-admin.js",
+    "check": "node --check server.js && node --check routes/auth.js && node --check routes/admin.js && node --check routes/otp.js && node --check routes/passwordReset.js && node --check routes/predictions.js && node --check controllers/authController.js && node --check controllers/otpController.js && node --check controllers/passwordResetController.js && node --check controllers/predictionController.js && node --check middleware/auth.js && node --check scripts/create-super-admin.js"
   },
   "engines": {
     "node": ">=20"
